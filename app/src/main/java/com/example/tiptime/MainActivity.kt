@@ -39,6 +39,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,13 +62,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
-    var amountInput = mutableStateOf("0")
+    var amountInput by remember { mutableStateOf("") }
+
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
+
     TextField(
-        value = amountInput.value,
-        onValueChange = { amountInput.value = it },
-        modifier = modifier
+        value = amountInput,
+        onValueChange = { amountInput = it },
+        label = { Text(stringResource(R.string.bill_amount)) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
 @Composable
